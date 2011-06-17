@@ -11,6 +11,20 @@ var nicks = [];
 // google transl
 google.load('language', '1');
 
+// ändra språk
+language = 'en'; //default
+
+$(function() {
+
+	$('#language_switch').change(function() {
+
+		language = $(this).attr('value');
+		console.log(language);
+
+	})
+	
+})
+
 
 //  CUT  ///////////////////////////////////////////////////////////////////
 /* This license and copyright apply to all code until the next "CUT"
@@ -191,6 +205,8 @@ function scrollDown () {
   $("#entry").focus();
 }
 
+
+
 //inserts an event into the stream for display
 //the event may be a msg, join or part type
 //from is the user, text is the body and time is the timestamp, defaulting to now
@@ -208,15 +224,22 @@ function addMessage (from, text, time, _class) {
   }
 
 
-	console.log(text);
+	google.language.detect(text, function(result) {
+		
+			src_lang = result.language;
+		
+			console.log(src_lang + ": " + text);
+	});
+
+
 	// översätt text här
 
-	google.language.translate(text, '', 'sv', function(result) {
+	google.language.translate(text, '', language, function(result) {
 		
 		text = result.translation;
 		
 		//översättning
-		console.log(text);
+		console.log(language + ": " + text);
 
 	  //every message you see is actually a table with 3 cols:
 	  //  the time,

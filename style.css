@@ -26,6 +26,10 @@ table {
 a { text-decoration: none; color: #888; }
 a:hover { text-decoration: underline; color: #aaa; }
 
+#language {
+	float:right !important;
+}
+
 #loading, #connect {
   background: #22252a;
   position: fixed;

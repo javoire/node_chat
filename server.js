@@ -23,6 +23,10 @@ var channel = new function () {
   var messages = [],
       callbacks = [];
 
+	this.messages = function () {
+		return messages;
+	}
+
   this.appendMessage = function (nick, type, text) {
     var m = { nick: nick
             , type: type // "msg", "join", "part"
@@ -170,6 +174,16 @@ fu.get("/part", function (req, res) {
     session.destroy();
   }
   res.simpleJSON(200, { rss: mem.rss });
+});
+
+fu.get("/refr", function (req, res) {
+	//refreshfunktion på medd
+
+	mess = channel.messages();
+
+	// skicka tillbaka alla messages
+	res.simpleJSON(200, { messages: mess });
+	
 });
 
 fu.get("/recv", function (req, res) {

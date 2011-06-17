@@ -33,7 +33,7 @@ var server = createServer(function (req, res) {
 
     res.simpleJSON = function (code, obj) {
       var body = new Buffer(JSON.stringify(obj));
-      res.writeHead(code, { "Content-Type": "text/json"
+      res.writeHead(code, { "Content-Type": "text/json charset=utf-8"
                           , "Content-Length": body.length
                           });
       res.end(body);

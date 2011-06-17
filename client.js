@@ -529,7 +529,57 @@ $(document).ready(function() {
 	$('#language_switch').change(function() {
 
 		language = $(this).attr('value');
+
 		console.log(language);
+		
+		// hämta meddelanden
+		$.ajax({ cache: false
+	         , type: "GET"
+	         , url: "/refr"
+	         , dataType: "json"
+	         , data: { }
+					 , error: function () {
+	             addMessage("", "nåt fel med refresh", new Date(), "error");
+	           }
+	         , success: function (data) {
+
+							console.log(data.messages);
+
+							if(!data.messages) {
+								return;
+							}
+
+							messages = data.messages;
+							
+							// ta bort bef medd
+							$('#log').html('');
+							
+							
+							// printa ut meddelanden
+
+							for (var i=0; i < messages.length; i++) {
+								var message = messages[i];
+
+								switch (message.type) {
+					        case "msg":
+					          addMessage(message.nick, message.text, message.timestamp);
+					          break;
+
+					        case "join":
+					          userJoin(message.nick, message.timestamp);
+					          break;
+
+					        case "part":
+					          userPart(message.nick, message.timestamp);
+					          break;
+					      }
+
+							}
+
+	         }
+	     });
+	
+
 
 	})
 

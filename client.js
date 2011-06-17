@@ -257,7 +257,7 @@ function addMessage (from, text, time, _class) {
 	              + '  <td class="date">' + util.timeString(time) + '</td>'
 	              + '  <td class="nick">' + util.toStaticHTML(from) + '</td>'
 	              + '  <td class="msg-text">' + text  + '</td>'
-								+ '  <td class="src-lang">original message: [' + src_lang + '] '  + text_src + '</td>' 
+								+ '  <td class="src-lang">original message: '  + text_src + ' [' + src_lang + '] </td>' 
 	              + '</tr>'
 	              ;
 	  messageElement.html(content);

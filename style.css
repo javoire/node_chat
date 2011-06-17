@@ -30,6 +30,13 @@ a:hover { text-decoration: underline; color: #aaa; }
 	float:right !important;
 }
 
+.src-lang {
+	color: #444;
+	font-style: italic;
+	padding-left: 17px;
+	vertical-align: bottom;
+}
+
 #loading, #connect {
   background: #22252a;
   position: fixed;

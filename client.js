@@ -14,17 +14,6 @@ google.load('language', '1');
 // ändra språk
 language = 'en'; //default
 
-$(function() {
-
-	$('#language_switch').change(function() {
-
-		language = $(this).attr('value');
-		console.log(language);
-
-	})
-	
-})
-
 
 //  CUT  ///////////////////////////////////////////////////////////////////
 /* This license and copyright apply to all code until the next "CUT"
@@ -236,6 +225,7 @@ function addMessage (from, text, time, _class) {
 
 	google.language.translate(text, '', language, function(result) {
 		
+		text_src = text; // spara original
 		text = result.translation;
 		
 		//översättning
@@ -267,6 +257,7 @@ function addMessage (from, text, time, _class) {
 	              + '  <td class="date">' + util.timeString(time) + '</td>'
 	              + '  <td class="nick">' + util.toStaticHTML(from) + '</td>'
 	              + '  <td class="msg-text">' + text  + '</td>'
+								+ '  <td class="src-lang">original message: [' + src_lang + '] '  + text_src + '</td>' 
 	              + '</tr>'
 	              ;
 	  messageElement.html(content);
@@ -533,6 +524,14 @@ $(document).ready(function() {
     scrollDown();
     return;
   }
+
+	// välja språk
+	$('#language_switch').change(function() {
+
+		language = $(this).attr('value');
+		console.log(language);
+
+	})
 
   // remove fixtures
   $("#log table").remove();

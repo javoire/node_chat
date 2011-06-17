@@ -8,6 +8,10 @@ var CONFIG = { debug: false
 
 var nicks = [];
 
+// google transl
+google.load('language', '1');
+
+
 //  CUT  ///////////////////////////////////////////////////////////////////
 /* This license and copyright apply to all code until the next "CUT"
 http://github.com/jherdman/javascript-relative-time-helpers/
@@ -207,44 +211,52 @@ function addMessage (from, text, time, _class) {
 	console.log(text);
 	// översätt text här
 
-	//översättning
-	console.log(text);
+	google.language.translate(text, '', 'en', function(result) {
+		
+		text = result.translation;
+		
+		//översättning
+		console.log(text);
 
-  //every message you see is actually a table with 3 cols:
-  //  the time,
-  //  the person who caused the event,
-  //  and the content
-  var messageElement = $(document.createElement("table"));
+	  //every message you see is actually a table with 3 cols:
+	  //  the time,
+	  //  the person who caused the event,
+	  //  and the content
+	  var messageElement = $(document.createElement("table"));
 
-  messageElement.addClass("message");
-  if (_class)
-    messageElement.addClass(_class);
+	  messageElement.addClass("message");
+	  if (_class)
+	    messageElement.addClass(_class);
 
-  // sanitize
-  text = util.toStaticHTML(text);
+	  // sanitize
+	  text = util.toStaticHTML(text);
 
 
-  // If the current user said this, add a special css class
-  var nick_re = new RegExp(CONFIG.nick);
-  if (nick_re.exec(text))
-    messageElement.addClass("personal");
+	  // If the current user said this, add a special css class
+	  var nick_re = new RegExp(CONFIG.nick);
+	  if (nick_re.exec(text))
+	    messageElement.addClass("personal");
 
-  // replace URLs with links
-  text = text.replace(util.urlRE, '<a target="_blank" href="$&">$&</a>');
+	  // replace URLs with links
+	  text = text.replace(util.urlRE, '<a target="_blank" href="$&">$&</a>');
 
-  var content = '<tr>'
-              + '  <td class="date">' + util.timeString(time) + '</td>'
-              + '  <td class="nick">' + util.toStaticHTML(from) + '</td>'
-              + '  <td class="msg-text">' + text  + '</td>'
-              + '</tr>'
-              ;
-  messageElement.html(content);
+	  var content = '<tr>'
+	              + '  <td class="date">' + util.timeString(time) + '</td>'
+	              + '  <td class="nick">' + util.toStaticHTML(from) + '</td>'
+	              + '  <td class="msg-text">' + text  + '</td>'
+	              + '</tr>'
+	              ;
+	  messageElement.html(content);
 
-  //the log is the stream that we view
-  $("#log").append(messageElement);
+	  //the log is the stream that we view
+	  $("#log").append(messageElement);
 
-  //always view the most recent message when it is added
-  scrollDown();
+	  //always view the most recent message when it is added
+	  scrollDown();
+		
+	});
+
+
 }
 
 function updateRSS () {

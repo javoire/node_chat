@@ -211,7 +211,7 @@ function addMessage (from, text, time, _class) {
 	console.log(text);
 	// översätt text här
 
-	google.language.translate(text, '', 'en', function(result) {
+	google.language.translate(text, '', 'sv', function(result) {
 		
 		text = result.translation;
 		

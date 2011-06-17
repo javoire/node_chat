@@ -203,6 +203,13 @@ function addMessage (from, text, time, _class) {
     time = new Date(time);
   }
 
+
+	console.log(text);
+	// översätt text här
+
+	//översättning
+	console.log(text);
+
   //every message you see is actually a table with 3 cols:
   //  the time,
   //  the person who caused the event,
@@ -215,6 +222,7 @@ function addMessage (from, text, time, _class) {
 
   // sanitize
   text = util.toStaticHTML(text);
+
 
   // If the current user said this, add a special css class
   var nick_re = new RegExp(CONFIG.nick);
@@ -340,6 +348,7 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     // XXX should add to messages immediately
+
     jQuery.get("/send", {id: CONFIG.id, text: msg}, function (data) { }, "json");
   }
 }

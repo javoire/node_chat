@@ -203,7 +203,7 @@ function scrollDown () {
 function addMessage (from, text, time, _class) {
   if (text === null)
     return;
-
+		
   if (time == null) {
     // if the time is null or undefined, use the current time.
     time = new Date();
@@ -212,67 +212,80 @@ function addMessage (from, text, time, _class) {
     time = new Date(time);
   }
 
+	// default
+	src_lang = '';
 
+	function outpoutHtml (from, text, time, _class, text_src, src_lang) {
+	
+		  //every message you see is actually a table with 3 cols:
+		  //  the time,
+		  //  the person who caused the event,
+		  //  and the content
+			// skapa lite html
+			var messageElement = $(document.createElement("table"));
+
+		  messageElement.addClass("message");
+		  if (_class)
+		    messageElement.addClass(_class);
+		
+		  // sanitize
+		  text = util.toStaticHTML(text);
+		
+		  // If the current user said this, add a special css class
+		  var nick_re = new RegExp(CONFIG.nick);
+		  if (nick_re.exec(text))
+		    messageElement.addClass("personal");
+
+		  // replace URLs with links
+		  text = text.replace(util.urlRE, '<a target="_blank" href="$&">$&</a>');
+
+		  var content = '<tr>'
+		              + '  <td class="date">' + util.timeString(time) + '</td>'
+		              + '  <td class="nick">' + util.toStaticHTML(from) + '</td>'
+		              + '  <td class="msg-text">' + text  + '</td>';
+			if (text_src != null && src_lang != null) {
+				content += '  <td class="src-lang">original message: '  + text_src + ' [' + src_lang + '] </td>';
+			}
+		 
+			content += '</tr>' // avsl rad
+		              ;
+		  messageElement.html(content);
+
+		  //the log is the stream that we view
+		  $("#log").append(messageElement);
+
+		  //always view the most recent message when it is added
+		  scrollDown();
+
+	}
+		
+	// identifiera source lang
 	google.language.detect(text, function(result) {
 		
 			src_lang = result.language;
-		
-			console.log(src_lang + ": " + text);
+					
+			// om source lang och language ej är samma: översätt
+			if (src_lang != language) {
+				
+				// översätt text här
+				google.language.translate( { text: text, type: 'text' }, '', language, function(result) {
+
+					text_src = text; // spara original
+					text = result.translation;
+
+					// logga översättning har skett
+					console.log(src_lang + " to " + language  + ": " + text);
+					
+					// printa ut 
+					outpoutHtml(from, text, time, _class, text_src, src_lang);
+
+				});
+			} else { // annars kör bara ut d som det är
+				outpoutHtml(from, text, time, _class);
+			};
+			
 	});
-
-
-	// översätt text här
-
-	google.language.translate( { text: text, type: 'text' }, '', language, function(result) {
-		
-		text_src = text; // spara original
-		text = result.translation;
-		
-		console.log(result);
-		
-		//översättning
-		console.log(language + ": " + text);
-
-	  //every message you see is actually a table with 3 cols:
-	  //  the time,
-	  //  the person who caused the event,
-	  //  and the content
-	  var messageElement = $(document.createElement("table"));
-
-	  messageElement.addClass("message");
-	  if (_class)
-	    messageElement.addClass(_class);
-
-	  // sanitize
-	  text = util.toStaticHTML(text);
-
-
-	  // If the current user said this, add a special css class
-	  var nick_re = new RegExp(CONFIG.nick);
-	  if (nick_re.exec(text))
-	    messageElement.addClass("personal");
-
-	  // replace URLs with links
-	  text = text.replace(util.urlRE, '<a target="_blank" href="$&">$&</a>');
-
-	  var content = '<tr>'
-	              + '  <td class="date">' + util.timeString(time) + '</td>'
-	              + '  <td class="nick">' + util.toStaticHTML(from) + '</td>'
-	              + '  <td class="msg-text">' + text  + '</td>'
-								+ '  <td class="src-lang">original message: '  + text_src + ' [' + src_lang + '] </td>' 
-	              + '</tr>'
-	              ;
-	  messageElement.html(content);
-
-	  //the log is the stream that we view
-	  $("#log").append(messageElement);
-
-	  //always view the most recent message when it is added
-	  scrollDown();
-		
-	});
-
-
+	
 }
 
 function updateRSS () {

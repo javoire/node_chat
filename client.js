@@ -223,10 +223,12 @@ function addMessage (from, text, time, _class) {
 
 	// översätt text här
 
-	google.language.translate(text, '', language, function(result) {
+	google.language.translate( { text: text, type: 'text' }, '', language, function(result) {
 		
 		text_src = text; // spara original
 		text = result.translation;
+		
+		console.log(result);
 		
 		//översättning
 		console.log(language + ": " + text);
@@ -500,17 +502,17 @@ $(document).ready(function() {
 
     //make the actual join request to the server
     $.ajax({ cache: false
-           , type: "GET" // XXX should be POST
-           , dataType: "json"
-           , url: "/join"
-           , data: { nick: nick }
-           , error: function () {
-               alert("error connecting to server");
-               showConnect();
-             }
-           , success: onConnect
-           });
-    return false;
+					, type: "GET" // XXX should be POST
+					, dataType: "json"
+					, url: "/join"
+					, data: { nick: nick }
+					, error: function () {
+							alert("error connecting to server");
+ 							showConnect();
+						}
+						, success: onConnect
+					});
+	return false;
   });
 
   // update the daemon uptime every 10 seconds
@@ -553,7 +555,6 @@ $(document).ready(function() {
 							
 							// ta bort bef medd
 							$('#log').html('');
-							
 							
 							// printa ut meddelanden
 
